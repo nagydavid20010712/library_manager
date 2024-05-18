@@ -1,11 +1,11 @@
 <?php return array(
     'root' => array(
-        'pretty_version' => '1.0.0+no-version-set',
-        'version' => '1.0.0.0',
+        'pretty_version' => 'dev-main',
+        'version' => 'dev-main',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'reference' => NULL,
+        'reference' => '0ce40139893537fc4d84b868ae8d0025f37d1da0',
         'name' => 'laravel/laravel',
         'dev' => true,
     ),
@@ -83,6 +83,15 @@
             'install_path' => __DIR__ . '/../egulias/email-validator',
             'aliases' => array(),
             'reference' => 'ebaaf5be6c0286928352e054f2d5125608e5405e',
+            'dev_requirement' => false,
+        ),
+        'ezyang/htmlpurifier' => array(
+            'pretty_version' => 'v4.17.0',
+            'version' => '4.17.0.0',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../ezyang/htmlpurifier',
+            'aliases' => array(),
+            'reference' => 'bbc513d79acf6691fa9cf10f192c90dd2957f18c',
             'dev_requirement' => false,
         ),
         'fakerphp/faker' => array(
@@ -364,6 +373,24 @@
                 0 => 'v11.7.0',
             ),
         ),
+        'intervention/gif' => array(
+            'pretty_version' => '4.1.0',
+            'version' => '4.1.0.0',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../intervention/gif',
+            'aliases' => array(),
+            'reference' => '3a2b5f8a8856e8877cdab5c47e51aab2d4cb23a3',
+            'dev_requirement' => false,
+        ),
+        'intervention/image' => array(
+            'pretty_version' => '3.6.4',
+            'version' => '3.6.4.0',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../intervention/image',
+            'aliases' => array(),
+            'reference' => '193324ec88bc5ad4039e57ce9b926ae28dfde813',
+            'dev_requirement' => false,
+        ),
         'kodova/hamcrest-php' => array(
             'dev_requirement' => true,
             'replaced' => array(
@@ -380,12 +407,12 @@
             'dev_requirement' => false,
         ),
         'laravel/laravel' => array(
-            'pretty_version' => '1.0.0+no-version-set',
-            'version' => '1.0.0.0',
+            'pretty_version' => 'dev-main',
+            'version' => 'dev-main',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
-            'reference' => NULL,
+            'reference' => '0ce40139893537fc4d84b868ae8d0025f37d1da0',
             'dev_requirement' => false,
         ),
         'laravel/pint' => array(
@@ -476,6 +503,15 @@
             'install_path' => __DIR__ . '/../league/mime-type-detection',
             'aliases' => array(),
             'reference' => 'ce0f4d1e8a6f4eb0ddff33f57c69c50fd09f4301',
+            'dev_requirement' => false,
+        ),
+        'mews/purifier' => array(
+            'pretty_version' => '3.4.2',
+            'version' => '3.4.2.0',
+            'type' => 'package',
+            'install_path' => __DIR__ . '/../mews/purifier',
+            'aliases' => array(),
+            'reference' => 'd4d3830267eeda7b385d61dd680ace14dcf142df',
             'dev_requirement' => false,
         ),
         'mockery/mockery' => array(

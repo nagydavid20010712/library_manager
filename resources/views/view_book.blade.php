@@ -120,6 +120,10 @@
                                         <td style="background-color: #F1EEDC;">Nyelv:</td>
                                         <td style="background-color: #F1EEDC;">{{ $book->language }}</td>
                                     <tr>
+                                    <tr>
+                                        <td style="background-color: #F1EEDC;">ISBN:</td>
+                                        <td style="background-color: #F1EEDC;">{{ $book->isbn }}</td>
+                                    <tr>
                                 </tbody>
                             </table>
                         </div>

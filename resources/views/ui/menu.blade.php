@@ -12,7 +12,7 @@
           <a class="nav-link active" href="/list_books">Könyvkereső</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link active" href="#">Könyv hozzáadása</a>
+          <a class="nav-link active" href="/add_book">Könyv hozzáadása</a>
         </li>
         <li class="nav-item">
           <a class="nav-link active" target="_blank" href="http://localhost:7000">PhpMyAdmin</a>

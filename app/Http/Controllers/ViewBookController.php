@@ -50,7 +50,7 @@ class ViewBookController extends Controller
         ]);
 
         if($validated->fails()) {
-            return response()->json(["msgType" => "form_error", "msg" => $validated->errors()], 200);
+            return response()->json(["msgType" => "form_error", "errors" => $validated->errors()], 200);
         }
 
         /*összes whitespace karakter eltávolítása*/
@@ -79,7 +79,7 @@ class ViewBookController extends Controller
            $w_writers == $cleaned_writers &&
            $w_genre == $cleaned_genre) {
             
-            $res = DB::transaction(function() use($request, $cleaned_description, $cleaned_genre, $cleaned_publish, $cleaned_title, $cleaned_writers) {
+            $res = DB::transaction(function() use($request) {
                 Book::where("isbn", $request->input("isbn"))
                 ->update(["title" => $request->input("title"), "description" => $request->input("description"), "publish_date" => $request->input("publish"), "writers" => $request->input("writers"), "genre" => $request->input("genre")]);
                 return true;

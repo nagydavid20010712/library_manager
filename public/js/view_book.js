@@ -53,7 +53,7 @@ $("#confirm_book_update").click(() => {
         success: function(data) {
             if(data["msgType"] === "form_error") {
                 //console.log(data["msg"]);
-                $.each(data["msg"], (k, v) => {
+                $.each(data["errors"], (k, v) => {
                     showErrors(k + "_error", v[0]);
                 })
             } else if(data["msgType"] === "not_known") {

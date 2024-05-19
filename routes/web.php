@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\IndexController;
 use App\Http\Controllers\ViewBookController;
 use App\Http\Controllers\ListBooksController;
+use App\Http\Controllers\AddBookController;
 
 Route::get('/', [IndexController::class, "index"]);
 
@@ -16,3 +17,6 @@ Route::delete("/delete_book/{book_isbn}", [ViewBookController::class, "delete_bo
 Route::post("/update_book", [ViewBookController::class, "update_book"]);
 
 Route::get("/list_books", [ListBooksController::class, "index"]);
+
+Route::get("/add_book", [AddBookController::class, "index"]);
+Route::post("/upload_book", [AddBookController::class, "upload_book"]);

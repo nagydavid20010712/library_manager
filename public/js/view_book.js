@@ -41,7 +41,7 @@ $("#confirm_book_update").click(() => {
     formData.append("description", $("#description").val());
     formData.append("writers", $("#writers").val());
     formData.append("genre", $("#genre").val());
-    formData.append("cover", document.getElementById("cover").files[0]);
+    //formData.append("cover", document.getElementById("cover").files[0]);
     formData.append("isbn", parseInt($("#confirm_book_update").val()));
 
     $.ajax({
@@ -57,13 +57,30 @@ $("#confirm_book_update").click(() => {
                     showErrors(k + "_error", v[0]);
                 })
             } else if(data["msgType"] === "not_known") {
-                console.log(data["msg"]);
+                $("#error_info").html(data["msg"]);
+                $("#error_modal").modal("show");
             } else if(data["msgType"] === "success") {
-                console.log(data["msg"]); 
-            } else if(data["msgType"] === "cover_error") {
-                console.log(data["msg"]);
-            }
+                //console.log(data["msg"]); 
+                //console.log(data["updated_data"]);
+                
+                /*adatok frissítése*/
+                $("#book_title").html(data["updated_data"]["title"]);
+                $("#book_description").html(data["updated_data"]["description"]);
+                $("#publish_date").html(data["updated_data"]["publish_date"]);
+                $("#book_writers").html(data["updated_data"]["writers"]);
+                $("#book_genre").html(data["updated_data"]["genre"]);
 
+                /*szerkesztő modal bezárása*/
+                $("#change_book_modal").modal("hide");
+
+                /*sikerességet jelző modal megnyitása*/
+                $("#success_info").html(data["msg"]);
+                $("#success_modal").modal("show");
+
+            } else if(data["msgType"] === "update_err") {
+                $("#error_info").html(data["msg"]);
+                $("#error_modal").modal("show");
+            }
         }
     })
 });

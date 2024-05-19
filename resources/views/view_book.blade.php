@@ -45,6 +45,22 @@
         </div>
     </div>
 
+    <div class="modal fade" id="success_modal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Siker</h5>
+                </div>
+                <div class="modal-body">
+                    <h5 id="success_info"></h5>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success" data-bs-dismiss="modal">Bezárás</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="container mt-5">
         @include("ui.menu")
         <div class="row mt-5">
@@ -66,7 +82,7 @@
                     <div class="row">
                         <div class="col">
                             <!--cím-->
-                            <h4>{{ $book->title }}</h4>
+                            <h4 id="book_title">{{ $book->title }}</h4>
                         </div>
                     </div>
                     <div class="row mt-2">
@@ -78,7 +94,7 @@
                     <div class="row">
                         <div class="col">
                             <!-- rövid ismertető helye -->
-                            <p style="text-align: justify;">
+                            <p style="text-align: justify;" id="book_description">
                                 <!--Hemul, a kommandós kiképzőből lett stalker rosszul tűri, ha csapata nem az elvárásai szerint viselkedik. Ám mivel kockázatos küldetéseiért kapott pénze rendszerint kifolyik a keze közül, most mégis kénytelen kísérőül szegődni egy csoport extrém kalandokat kereső, öntörvényű turista mellé. A Zóna azonban nem az a hely, ahová önfeledt szafarikra járhat az ember.
                                 A vadásztúra ígéretesen indul, ám a mutánsoktól hemzsegő vidék korántsem veszélytelen. Az első összecsapások után a csapat tagjai arra is ráébrednek, hogy a legveszedelmesebb szörnyeknek olykor emberarcuk van. No persze olykor a turisták sem egyszerű turisták. De hogy az önként vállalt vesszőfutást ki ússza meg élve, ki juthat ki a Zónából - ha ki lehet még jutni belőle egyáltalán -, azt még egy tapasztalt stalker sem tudja előre megmondani.-->
                                 {{ $book->description }}
@@ -102,7 +118,7 @@
                                     </tr>
                                     <tr>
                                         <td style="background-color: #F1EEDC;">Kiadás éve:</td>
-                                        <td style="background-color: #F1EEDC;">{{ $book->publish_date }}</td>
+                                        <td style="background-color: #F1EEDC;" id="publish_date">{{ $book->publish_date }}</td>
                                     </tr>
                                     <tr>
                                         <td style="background-color: #F1EEDC;">Oldalak száma:</td>
@@ -110,11 +126,11 @@
                                     </tr>
                                     <tr>
                                         <td style="background-color: #F1EEDC;">Szerző(k):</td>
-                                        <td style="background-color: #F1EEDC;">{{ $book->writers }}</td>
+                                        <td style="background-color: #F1EEDC;" id="book_writers">{{ $book->writers }}</td>
                                     </tr>
                                     <tr>
                                         <td style="background-color: #F1EEDC;">Műfajo(k):</td>
-                                        <td style="background-color: #F1EEDC;">{{ $book->genre }}</td>
+                                        <td style="background-color: #F1EEDC;" id="book_genre">{{ $book->genre }}</td>
                                     </tr>
                                     <tr>
                                         <td style="background-color: #F1EEDC;">Nyelv:</td>

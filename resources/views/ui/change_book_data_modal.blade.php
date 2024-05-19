@@ -46,13 +46,13 @@
                
             </div>
           </div>
-          <div class="col-6">
+          <!--<div class="col-6">
             <label for="cover">Borítókép</label>
             <input type="file" class="form-control" name="cover" id="cover">
             <div class="alert alert-danger mt-2" id="cover_error" role="alert">
                
             </div>
-          </div>
+          </div>-->
         </div>
       </div>
       <div class="modal-footer">

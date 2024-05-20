@@ -3,10 +3,29 @@ var errors = ["number_of_pages_error", "language_error", "publisher_error", "isb
 $.each(errors, (k, v) => {
     //console.log(k, v);
     $("#" + v).css("visibility", "hidden");
+});
+$("#new_series_error").css("visibility", "hidden")
+
+$("#new_series").prop("disabled", true);
+$("#series").prop("disabled", false);
+
+$("#switch").change((e) => {
+    //console.log($("#switch").is(":checked"));
+    $("#new_series").prop("disabled", !$("#switch").is(":checked"));
+    $("#series").prop("disabled", $("#switch").is(":checked"));
 })
 
 
+
+
+
 $("#upload_btn").click(() => {
+    $.each(errors, (k, v) => {
+        //console.log(k, v);
+        $("#" + v).css("visibility", "hidden");
+    });
+    $("#new_series_error").css("visibility", "hidden")
+
     let formData = new FormData();
     formData.append("_token", $("meta[name=csrf-token]").attr("content"));
     formData.append("isbn", $("#isbn").val());
@@ -19,6 +38,11 @@ $("#upload_btn").click(() => {
     formData.append("number_of_pages", $("#number_of_pages").val());
     formData.append("genre", $("#genre").val());
     formData.append("cover", document.getElementById("cover").files[0]);
+    formData.append("checked", $("#switch").is(":checked"));
+    formData.append("series", $("#series").val());
+    formData.append("new_series", $("#new_series").val());
+
+
 
     $.ajax({
         url: "/upload_book",
@@ -36,9 +60,12 @@ $("#upload_btn").click(() => {
                     showErrors(k + "_error", v[0]);
                 });
                 
-            } else if(data["msgType"] === "cover_error" || data["msgType"] === "not_known" || data["msgType"] === "insert_error") {
+            } else if(data["msgType"] === "cover_error" || data["msgType"] === "not_known" || data["msgType"] === "insert_error" || data["msgType"] === "duplicate_error") {
                 $("#error_info").html(data["msg"]);
                 $("#error_modal").modal("show");
+            } else if(data["msgType"] === "series_error") {
+                $("#new_series_error").html(data["error"]);
+                $("#new_series_error").css("visibility", "visible")
             }
         }
     });

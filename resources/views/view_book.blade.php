@@ -80,9 +80,24 @@
             <div class="col-8">
                 <div class="container">
                     <div class="row">
-                        <div class="col">
+                        <div class="col-6">
                             <!--cím-->
                             <h4 id="book_title">{{ $book->title }}</h4>
+                        </div>
+                        <div class="col-6">
+                            <div class="row float-end">
+                                <div class="col">
+                                    <select name="lang" id="lang" class="form-select">
+                                        @foreach ($supported_languages as $sl)
+                                            <option value="{{ $sl['language'] }}">{{ $sl["name"] }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="col">
+                                    <input type="hidden" name="h_isbn" id="h_isbn" value="{{ $book->isbn }}">
+                                    <button type="button" class="btn btn-primary" id="btn_translate">Fordítás</button>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="row mt-2">
@@ -140,6 +155,16 @@
                                         <td style="background-color: #F1EEDC;">ISBN:</td>
                                         <td style="background-color: #F1EEDC;">{{ $book->isbn }}</td>
                                     <tr>
+                                    <tr>
+                                        <td style="background-color: #F1EEDC;">Széria:</td>
+                                        <td style="background-color: #F1EEDC;">
+                                            @if ($series_name == null)
+                                                nem tartozik szériához
+                                            @else
+                                                {{ $series_name->name }}
+                                            @endif
+                                        </td>
+                                    </tr>
                                 </tbody>
                             </table>
                         </div>
@@ -154,7 +179,7 @@
             </div>
         </div>
         <div class="row">
-            <div class="col">
+            <!--<div class="col">
                 <div class="card" style="width: 18rem;">
                     <img src="{{ asset('images/stalker2.jpg') }}" class="card-img-top" alt="...">
                     <div class="card-body">
@@ -171,8 +196,33 @@
                         <a href="#" class="btn btn-primary">Go somewhere</a>
                     </div>
                 </div>
-            </div>
+            </div>-->
+            @if ($series_name == null && $series == null)
+                <div class="col d-flex justify-content-center align-items-center">
+                    <h3>Ehhez a könyvhöz nem tartozik széria.</h3>
+                </div>    
+            @elseif ($series_name != null && count($series) == 0) 
+                <div class="col d-flex justify-content-center align-items-center">
+                    <h3>Jelenleg nem tartoznak további részek a szériához</h3>
+                </div> 
+            @else
+                
+                @foreach ($series as $s)
+                    
+                    <div class="col d-flex justify-content-center overflow-x-auto">
+                        <div class="card" style="width: 18rem;">
+                            <img src="{{ asset($s->cover) }}" class="card-img-top" alt="...">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ $s->title }}</h5>
+                                <a href="/view_book/{{ $s->isbn }}" class="btn btn-primary">Megtekintés</a>
+                            </div>
+                        </div>
+                    </div>
+                @endforeach
+            @endif
+
         </div>
+
         <div class="row mt-5">
             <div class="col">
                 <h3>Hasonló könyvek</h3>

@@ -15,6 +15,7 @@ Route::get("/view_book", function() {
 });
 Route::delete("/delete_book/{book_isbn}", [ViewBookController::class, "delete_book"]);
 Route::post("/update_book", [ViewBookController::class, "update_book"]);
+Route::post("/translate", [ViewBookController::class, "translate"]);
 
 Route::get("/list_books", [ListBooksController::class, "index"]);
 

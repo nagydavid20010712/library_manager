@@ -18,3 +18,7 @@
     </div>
 </body>
 </html>
+
+@php
+    phpinfo();
+@endphp

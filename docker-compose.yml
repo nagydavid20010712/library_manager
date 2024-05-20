@@ -47,6 +47,8 @@ services:
 
   memcached:
      image: memcached:latest
+     environment:
+      - MEMCACHED_PERSISTENT_ID=persistent_id
      ports:
       - 11211:11211
 

@@ -6,13 +6,19 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
 use App\Models\Book;
+use App\Models\Series;
+use App\Models\BookInSeries;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Log;
 
 use Purifier;
 class AddBookController extends Controller
 {
     public function index() {
-        return view("add_book");
+
+        $series = Series::all();
+    
+        return view("add_book", ["series" => $series]);
     }
 
     public function upload_book(Request $request) {
@@ -25,6 +31,7 @@ class AddBookController extends Controller
             "writers" => "required",
             "language" => "required",
             "number_of_pages" => "required|numeric",
+            "genre" => "required",
             "cover" => "required|file|mimes:jpg|max: 5120" //5MB
         ], 
         [
@@ -38,7 +45,8 @@ class AddBookController extends Controller
             "writers.required" => "A szerző(k) kitöltése kötelező!",
             "language.required" => "A nyelv kitöltése kötelező!",
             "number_of_pages.required" => "Az oldalak számát meg kell adni!",
-            "number_of_pages.numeric" => "Csak számot lehet megadni"
+            "number_of_pages.numeric" => "Csak számot lehet megadni",
+            "genre.required" => "A műfaj megadása kötelező!" 
         ]);
 
         if($validated->fails()) {
@@ -55,6 +63,12 @@ class AddBookController extends Controller
         $w_isbn = preg_replace('/\s+/', '', $request->input("isbn"));
         $w_language = preg_replace('/\s+/', '', $request->input("language"));
         $w_number_of_pages = preg_replace('/\s+/', '', $request->input("number_of_pages"));
+        $w_new_series = preg_replace('/\s+/', '', $request->input("new_series"));
+
+        if($request->input("checked") == "true" && $w_new_series === "") {
+            
+            return response()->json(["msgType" => "series_error", "error" => "A könvy szériájának a megadása kötelező!"], 200);
+        }
 
         /*XSS elleni védelem*/
         $cleaned_title = Purifier::clean($w_title);
@@ -66,7 +80,7 @@ class AddBookController extends Controller
         $cleaned_isbn = Purifier::clean($w_isbn);
         $cleaned_language = Purifier::clean($w_language);
         $cleaned_number_of_pages = Purifier::clean($w_number_of_pages);
-
+        $cleaned_new_series = Purifier::clean($w_new_series);
 
         if($w_title == $cleaned_title &&
            $w_publish == $cleaned_publish &&
@@ -76,27 +90,79 @@ class AddBookController extends Controller
            $w_publisher == $cleaned_publisher &&
            $w_isbn == $cleaned_isbn &&
            $w_language == $cleaned_language &&
-           $w_number_of_pages == $cleaned_number_of_pages) 
+           $w_number_of_pages == $cleaned_number_of_pages &&
+           $w_new_series == $cleaned_new_series) 
            {
                 $cover = $request->file("cover");
                 $cover_name = $request->input('isbn') . "." . $cover->getClientOriginalExtension();
-                $res = DB::transaction(function() use($request, $cover_name) {
-                    Book::create([
-                          "isbn" => $request->input("isbn"),
-                          "title" => $request->input("title"),
-                          "description" => $request->input("description"),
-                          "genre" => $request->input("genre"),
-                          "language" => $request->input("language"),
-                          "publisher" => $request->input("publisher"),
-                          "writers" => $request->input("writers"),
-                          "cover" => "images/book_covers/" . $cover_name,
-                          "publish_date" => $request->input("publish"),
-                          "number_of_pages" => $request->input("number_of_pages")
-                    ]);
-                    return true;
-                });
 
-                if($res) {
+                try {
+                    $res = DB::transaction(function() use($request, $cover_name) {
+                        Book::create([
+                              "isbn" => $request->input("isbn"),
+                              "title" => $request->input("title"),
+                              "description" => $request->input("description"),
+                              "genre" => $request->input("genre"),
+                              "language" => $request->input("language"),
+                              "publisher" => $request->input("publisher"),
+                              "writers" => $request->input("writers"),
+                              "cover" => "images/book_covers/" . $cover_name,
+                              "publish_date" => $request->input("publish"),
+                              "number_of_pages" => $request->input("number_of_pages")
+                        ]);
+    
+                        
+                        if($request->input("checked") == "true") {
+                            Log::info("lefutok valamiért");
+                            $new_series_id = Series::create([
+                                "name" => $request->input("new_series")
+                            ]);
+
+                            BookInSeries::create([
+                                "isbn" => $request->input("isbn"),
+                                "series_id" => $new_series_id->id
+                            ]);
+                        } else {
+                            /*csak akkor ha a könyv tényleg tartozik szériához*/
+                            if($request->input("series") != "ns") {
+                                /*$new_series_id = Series::create([
+                                    "name" => $request->input("series")
+                                ]);*/
+                                /*Mivel már tartozik egy szériához így csak elég összepárosítani őket*/
+                                BookInSeries::create([
+                                    "isbn" => $request->input("isbn"),
+                                    "series_id" => $request->input("series")
+                                ]);
+                            }
+                        }
+
+                        return true;
+                    });
+
+                    if($res) {
+                        $path = $cover->move(public_path("images/book_covers"), $cover_name);
+    
+                        if($path) {
+                            return response()->json(["msgType" => "success", "msg" => "Könyv hozzáadása sikeres!"], 200);
+                        } 
+                        
+                        return response()->json(["msgType" => "cover_error", "msg" => "Hiba történt a borító feltöltése során!"], 200);
+                    }
+
+                    return response()->json(["msgType" => "insert_error", "msg" => "Hiba történt a könyv hozzáadása során!"], 200);
+
+                } catch(\Illuminate\Database\QueryException $e) {
+                    if($e->errorInfo[1] == 1062) {
+                        return response()->json(["msgType" => "duplicate_error", "msg" => "Ilyen ISBN számú könyv már szerepel az adatbázisban!"], 200);
+                    }
+                    Log::info($e->getMessage());
+                    return response()->json(["msgType" => "insert_error", "msg" => "Hiba történt a könyv hozzáadása során!"], 200);
+                }
+
+
+                
+
+                /*if($res) {
                     $path = $cover->move(public_path("images/book_covers"), $cover_name);
 
                     if($path) {
@@ -106,9 +172,10 @@ class AddBookController extends Controller
                     return response()->json(["msgType" => "cover_error", "msg" => "Hiba történt a borító feltöltése során!"], 200);
                 } else {
                     return response()->json(["msgType" => "insert_error", "msg" => "Hiba történt a könyv hozzáadása során!"], 200);
-                }
+                }*/
 
-           }
+        }
+
         return response()->json(["msgType" => "not_known", "msg" => "Ismeretlen hiba történt!"], 200);
     }
 }

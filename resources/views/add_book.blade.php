@@ -132,9 +132,37 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-6"></div>
                     <div class="col-6">
-                        <button type="button" id="upload_btn" class="btn btn-primary">Feltöltés</button>
+                        <div class="row">
+                            <div class="col-6">
+                               
+                                @if (count($series) == 0)
+                                    <br>
+                                    <h6>Jelenleg nincsenek szériák az adatbázisban.</h6>
+                                @else
+                                    <label for="series">Széria</label>
+                                    <select name="series" class="form-select" id="series">
+                                        <option value="ns">Nem tartozik szériába</option>
+                                        @foreach ($series as $s)
+                                            <option value="{{ $s->id }}">{{ $s->name }}</option>
+                                        @endforeach
+                                    </select>
+                                    <label for="switch" class="form-check-label">Nem szerepel, magam adom meg. </label>
+                                    <input type="checkbox" name="switch" class="form-check-input" id="switch">
+                                @endif
+                            </div>
+                            <div class="col-6">
+                                <label for="new_series">Új széria neve</label>
+                                <input type="text" class="form-control" name="new_series" id="new_series">
+                                <div class="alert alert-danger mt-2" id="new_series_error" role="alert">
+                
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <br>
+                        <button type="button" id="upload_btn" class="btn btn-primary float-end w-25">Feltöltés</button>
                     </div>
                 </div>
             </div>

@@ -34,6 +34,11 @@ $("#confirm_book_delete").click(() => {
 });
 
 $("#confirm_book_update").click(() => {
+    $.each(errors, (k, v) => {
+        //console.log(k, v);
+        $("#" + v).css("visibility", "hidden");
+    })
+
     let formData = new FormData();
     formData.append("_token", $("meta[name=csrf-token]").attr("content"));
     formData.append("title", $("#title").val());
@@ -91,3 +96,24 @@ function showErrors(id, val) {
     $("#" + id).css("visibility", "visible");
 }
 
+$("#btn_translate").click(() => {
+    $.ajax({
+        url: "/translate",
+        type: "POST",
+        data: {
+            "_token": $("meta[name=csrf-token]").attr("content"),
+            "target_lang": $("#lang").val(),
+            "isbn": $("#h_isbn").val()
+        },
+        success: function(data) {
+            
+            if(data.translation == "success") {
+                console.log(data);
+                $("#book_title").html(data.translated_title.translations[0]["text"]);
+                $("#book_description").html(data.translated_description.translations[0]["text"]);
+            } else {
+                //console.log(data);
+            }
+        }
+    });
+});

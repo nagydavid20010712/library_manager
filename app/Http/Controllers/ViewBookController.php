@@ -4,23 +4,44 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Book;
+use App\Models\BookInSeries;
 
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\File;
-use Intervention\Image\Facades\Image;
+use Illuminate\Support\Facades\Http;
 
 use Purifier;
 
 class ViewBookController extends Controller
 {
     public function index($book_isbn) {
-
+        //Log::info(Cache::store("memcached")->get("anyad"));
         $book = Book::where("isbn", $book_isbn)->first();
 
-        return view("view_book", ["book" => $book]);
+        $series = BookInSeries::join("series", "series.id", "=", "book_in_series.series_id")->select("series_id", "name")->where("isbn", $book_isbn)->first(); 
+
+        $supported_languages = Http::get("https://api-free.deepl.com/v2/languages", [
+            "auth_key" => env("DEEPL_API_KEY")
+        ]);
+
+        if($series != null) {
+            $books_in_series = BookInSeries::join("books", "books.isbn", "=", "book_in_series.isbn")
+                                           ->select("books.isbn", "books.title", "books.cover")
+                                           ->where("book_in_series.isbn", "!=", $book_isbn)
+                                           ->where("book_in_series.series_id", "=", $series->series_id)
+                                           ->get();
+
+            if($books_in_series != null) {
+                return view("view_book", ["book" => $book, "series" => $books_in_series, "series_name" => $series, "supported_languages" => $supported_languages->json()]);
+            } 
+
+            return view("view_book", ["book" => $book, "series" => null, "series_name" => $series, "supported_languages" => $supported_languages->json()]);
+        }
+
+        return view("view_book", ["book" => $book, "series" => null, "series_name" => null, "supported_languages" => $supported_languages->json()]);
     }
 
     public function delete_book($book_isbn) {
@@ -111,4 +132,31 @@ class ViewBookController extends Controller
 
         return response()->json(["msgType" => "not_known", "msg" => "Ismeretlen hiba történt!"], 200);
     }
+
+    public function translate(Request $request) {
+        $book = Book::where("isbn", $request->input("isbn"))->first();
+
+        /*cím*/
+        $translated_title = Http::get("https://api-free.deepl.com/v2/translate", [
+            "auth_key" => env("DEEPL_API_KEY"),
+            "text" => $book->title,
+            "target_lang" => $request->input("target_lang")
+        ]);
+
+        /*leírás*/
+        $translated_description = Http::get("https://api-free.deepl.com/v2/translate", [
+            "auth_key" => env("DEEPL_API_KEY"),
+            "text" => $book->description,
+            "target_lang" => $request->input("target_lang")
+        ]);
+        
+        if(!$translated_title->successful() || !$translated_description->successful()) {
+            return response()->json(["translation" => "failed", "msg" => "Hiba történt a fordítás során!"], 200);
+        }
+
+        Log::info($translated_description);
+        return response()->json(["translation" => "success", "translated_title" => $translated_title->json(), "translated_description" => $translated_description->json()], 200);
+    }
+
+
 }

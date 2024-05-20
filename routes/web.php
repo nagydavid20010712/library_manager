@@ -18,6 +18,7 @@ Route::post("/update_book", [ViewBookController::class, "update_book"]);
 Route::post("/translate", [ViewBookController::class, "translate"]);
 
 Route::get("/list_books", [ListBooksController::class, "index"]);
+//Route::get("/list_books/{filter}{value}", [ListBooksController::class, "filter"]);
 
 Route::get("/add_book", [AddBookController::class, "index"]);
 Route::post("/upload_book", [AddBookController::class, "upload_book"]);

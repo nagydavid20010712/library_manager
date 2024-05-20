@@ -1,4 +1,4 @@
-var errors = ["title_error", "publish_error", "description_error", "writers_error", "genre_error", "cover_error"];
+var errors = ["number_of_pages_error", "language_error", "publisher_error", "title_error", "publish_error", "description_error", "writers_error", "genre_error", "cover_error"];
 
 $.each(errors, (k, v) => {
     //console.log(k, v);
@@ -48,6 +48,9 @@ $("#confirm_book_update").click(() => {
     formData.append("genre", $("#genre").val());
     //formData.append("cover", document.getElementById("cover").files[0]);
     formData.append("isbn", parseInt($("#confirm_book_update").val()));
+    formData.append("publisher", $("#publisher").val());
+    formData.append("language", $("#language").val());
+    formData.append("number_of_pages", $("#number_of_pages").val());
 
     $.ajax({
         url: "/update_book",
@@ -71,9 +74,12 @@ $("#confirm_book_update").click(() => {
                 /*adatok frissítése*/
                 $("#book_title").html(data["updated_data"]["title"]);
                 $("#book_description").html(data["updated_data"]["description"]);
-                $("#publish_date").html(data["updated_data"]["publish_date"]);
+                $("#book_publish_date").html(data["updated_data"]["publish_date"]);
                 $("#book_writers").html(data["updated_data"]["writers"]);
                 $("#book_genre").html(data["updated_data"]["genre"]);
+                $("#book_language").html(data["updated_data"]["language"]);
+                $("#book_number_of_pages").html(data["updated_data"]["number_of_pages"]);
+                $("#book_publisher").html(data["updated_data"]["publisher"]);
 
                 /*szerkesztő modal bezárása*/
                 $("#change_book_modal").modal("hide");
@@ -112,7 +118,8 @@ $("#btn_translate").click(() => {
                 $("#book_title").html(data.translated_title.translations[0]["text"]);
                 $("#book_description").html(data.translated_description.translations[0]["text"]);
             } else {
-                //console.log(data);
+                $("#error_info").html(data["msg"]);
+                $("#error_modal").modal("show");
             }
         }
     });

@@ -20,7 +20,7 @@ class ViewBookController extends Controller
     public function index($book_isbn) {
         //Log::info(Cache::store("memcached")->get("anyad"));
         $book = Book::where("isbn", $book_isbn)->first();
-
+        $same_books = Book::select("isbn", "title", "writers", "cover")->where("genre", "like", "%" . $book->genre . "%")->where("isbn", "!=", $book_isbn)->take(4)->get();
         $series = BookInSeries::join("series", "series.id", "=", "book_in_series.series_id")->select("series_id", "name")->where("isbn", $book_isbn)->first(); 
 
         $supported_languages = Http::get("https://api-free.deepl.com/v2/languages", [
@@ -35,13 +35,13 @@ class ViewBookController extends Controller
                                            ->get();
 
             if($books_in_series != null) {
-                return view("view_book", ["book" => $book, "series" => $books_in_series, "series_name" => $series, "supported_languages" => $supported_languages->json()]);
+                return view("view_book", ["book" => $book, "series" => $books_in_series, "series_name" => $series, "supported_languages" => $supported_languages->json(), "same" => $same_books]);
             } 
 
-            return view("view_book", ["book" => $book, "series" => null, "series_name" => $series, "supported_languages" => $supported_languages->json()]);
+            return view("view_book", ["book" => $book, "series" => null, "series_name" => $series, "supported_languages" => $supported_languages->json(), "same" => $same_books]);
         }
 
-        return view("view_book", ["book" => $book, "series" => null, "series_name" => null, "supported_languages" => $supported_languages->json()]);
+        return view("view_book", ["book" => $book, "series" => null, "series_name" => null, "supported_languages" => $supported_languages->json(), "same" => $same_books]);
     }
 
     public function delete_book($book_isbn) {
@@ -59,7 +59,10 @@ class ViewBookController extends Controller
             "publish" => "required|numeric",
             "description" => "required",
             "writers" => "required",
-            "genre" => "required"
+            "genre" => "required",
+            "publisher" => "required",
+            "language" => "required",
+            "number_of_pages" => "required|numeric"
         ],
         [
             "title.required" => "A cím kitöltése kötelező!",
@@ -67,7 +70,11 @@ class ViewBookController extends Controller
             "publish.numeric" => "Csak számot lehet megadni évnek!",
             "description.required" => "A leírás kitöltése kötelező!",
             "writers.required" => "A szerző(k) kitöltése kötelező!",
-            "genre.required" => "Műfaj kitöltése kötelező!"
+            "genre.required" => "Műfaj kitöltése kötelező!",
+            "publisher.required" => "Kiadó kitöltése kötelező!",
+            "language.required" => "Nyelv kitöltése kötelező!",
+            "number_of_pages.required" => "Oldalak számának megadása kötelező!",
+            "number_of_pages.numeric" => "Az oldalak száma csak szám lehet!"
         ]);
 
         if($validated->fails()) {
@@ -80,6 +87,9 @@ class ViewBookController extends Controller
         $w_description = preg_replace('/\s+/', '', $request->input("description"));
         $w_writers = preg_replace('/\s+/', '', $request->input("writers"));
         $w_genre = preg_replace('/\s+/', '', $request->input("genre"));
+        $w_publisher = preg_replace('/\s+/', '', $request->input("publisher"));
+        $w_language = preg_replace('/\s+/', '', $request->input("language"));
+        $w_number_of_pages = preg_replace('/\s+/', '', $request->input("number_of_pages"));
 
         /*XSS elleni védelem*/
         $cleaned_title = Purifier::clean($w_title);
@@ -87,22 +97,36 @@ class ViewBookController extends Controller
         $cleaned_description = Purifier::clean($w_description);
         $cleaned_writers = Purifier::clean($w_writers);
         $cleaned_genre = Purifier::clean($w_genre);
-        
-        Log::info($cleaned_genre);
+        $cleaned_publisher = Purifier::clean($w_publisher);
+        $cleaned_language = Purifier::clean($w_language);
+        $cleaned_number_of_pages = Purifier::clean($w_number_of_pages);
+
+        //Log::info($cleaned_genre);
 
         /**
          * ha nem történt tisztítás
          * akkor minden gond nélkül ellehet az eredetit tárolni
          */
-        if ($w_title == $cleaned_title && 
+        if ( $w_title == $cleaned_title && 
            $w_publish == $cleaned_publish &&
            $w_description == $cleaned_description &&
            $w_writers == $cleaned_writers &&
-           $w_genre == $cleaned_genre) {
+           $w_genre == $cleaned_genre && 
+           $w_publisher == $cleaned_publisher &&
+           $w_language == $cleaned_language &&
+           $w_number_of_pages == $cleaned_number_of_pages ) {
             
             $res = DB::transaction(function() use($request) {
                 Book::where("isbn", $request->input("isbn"))
-                ->update(["title" => $request->input("title"), "description" => $request->input("description"), "publish_date" => $request->input("publish"), "writers" => $request->input("writers"), "genre" => $request->input("genre")]);
+                ->update(["title" => $request->input("title"), 
+                          "description" => $request->input("description"), 
+                          "publish_date" => $request->input("publish"), 
+                          "writers" => $request->input("writers"), 
+                          "genre" => $request->input("genre"),
+                          "publisher" => $request->input("publisher"),
+                          "language" => $request->input("language"),
+                          "number_of_pages" => $request->input("number_of_pages")]);
+
                 return true;
             });
         

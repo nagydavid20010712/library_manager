@@ -15,30 +15,31 @@
             @include("ui.menu")
         </div>
 
-        <!-- majd a blade segítségével itt lesz kilistázva -->
-
-        
-
         <div class="row">
             <div class="col">
-                <div class="row mt-3">
-                    <div class="col-3">
-                        <label for="filter">Szűrés ez alapján</label>
-                        <select class="form-select" name="filter" id="filter">
-                            <option selected>Cím</option>
-                            <option>Műfaj</option>
-                            <option>Megjelenési dátum</option>
-                        </select>
+                <form action="/list_books" method="GET">
+                    <div class="row mt-3">
+                        <div class="col-3">
+                            <label for="filter">Szűrés ez alapján</label>
+                                <select class="form-select" name="filter" id="filter">
+                                    <option selected value="title">Cím</option>
+                                    <option value="genre">Műfaj</option>
+                                    <option value="publish_date">Megjelenési dátum</option>
+                                    <option value="writers">Szerző</option>
+                                    <option value="publisher">Kiadó</option>
+                                    <option value="language">Nyelv</option>
+                                </select>
+                        </div>
+                        <div class="col-3">
+                            <label for="value">Érték</label>
+                            <input class="form-control" type="text" name="value" id="value">
+                        </div>
+                        <div class="col-3">
+                            <br>
+                            <button class="form-control btn btn-success" type="submit">Szűrés</button>
+                        </div>
                     </div>
-                    <div class="col-3">
-                        <label for="value">Érték</label>
-                        <input class="form-control" type="text" name="value" id="value">
-                    </div>
-                    <div class="col-3">
-                        <br>
-                        <button class="form-control btn btn-success" type="button">Szűrés</button>
-                    </div>
-                </div>
+                </form>
             </div>
         </div>
 

@@ -46,13 +46,29 @@
                
             </div>
           </div>
-          <!--<div class="col-6">
-            <label for="cover">Borítókép</label>
-            <input type="file" class="form-control" name="cover" id="cover">
-            <div class="alert alert-danger mt-2" id="cover_error" role="alert">
+          <div class="col-6">
+            <label for="publisher">Kiadó</label>
+            <input type="text" name="publisher" id="publisher" value="{{ $book->publisher }}" class="form-control">
+            <div class="alert alert-danger mt-2" id="publisher_error" role="alert">
                
             </div>
-          </div>-->
+          </div>
+        </div>
+        <div class="row mt-2">
+          <div class="col-6">
+            <label for="language">Nyelv</label>
+            <input type="text" name="langugage" id="language" value="{{ $book->language }}" class="form-control">
+            <div class="alert alert-danger mt-2" id="language_error" role="alert">
+               
+            </div>
+          </div>
+          <div class="col-6">
+            <label for="number_of_pages">Oldalak száma</label>
+            <input type="number" name="number_of_pages" id="number_of_pages" value="{{ $book->number_of_pages }}" class="form-control">
+            <div class="alert alert-danger mt-2" id="number_of_pages_error" role="alert">
+               
+            </div>
+          </div>
         </div>
       </div>
       <div class="modal-footer">

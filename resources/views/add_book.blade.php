@@ -49,7 +49,7 @@
             @include("ui.menu")
         </div>
 
-        <div class="row mt-5">
+        <div class="row mt-5" style="background-color: #F1F0E8;">
             <div class="col">
                 <div class="row">
                     <div class="col-6">

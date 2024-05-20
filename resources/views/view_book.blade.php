@@ -129,15 +129,15 @@
                                 <tbody>
                                     <tr>
                                         <td style="background-color: #F1EEDC;">Kiadó:</td>
-                                        <td style="background-color: #F1EEDC;">{{ $book->publisher }}</td>
+                                        <td style="background-color: #F1EEDC;" id="book_publisher">{{ $book->publisher }}</td>
                                     </tr>
                                     <tr>
                                         <td style="background-color: #F1EEDC;">Kiadás éve:</td>
-                                        <td style="background-color: #F1EEDC;" id="publish_date">{{ $book->publish_date }}</td>
+                                        <td style="background-color: #F1EEDC;" id="book_publish_date">{{ $book->publish_date }}</td>
                                     </tr>
                                     <tr>
                                         <td style="background-color: #F1EEDC;">Oldalak száma:</td>
-                                        <td style="background-color: #F1EEDC;">{{ $book->number_of_pages }}</td>
+                                        <td style="background-color: #F1EEDC;" id="book_number_of_pages">{{ $book->number_of_pages }}</td>
                                     </tr>
                                     <tr>
                                         <td style="background-color: #F1EEDC;">Szerző(k):</td>
@@ -149,7 +149,7 @@
                                     </tr>
                                     <tr>
                                         <td style="background-color: #F1EEDC;">Nyelv:</td>
-                                        <td style="background-color: #F1EEDC;">{{ $book->language }}</td>
+                                        <td style="background-color: #F1EEDC;" id="book_language">{{ $book->language }}</td>
                                     <tr>
                                     <tr>
                                         <td style="background-color: #F1EEDC;">ISBN:</td>
@@ -203,7 +203,7 @@
                 </div>    
             @elseif ($series_name != null && count($series) == 0) 
                 <div class="col d-flex justify-content-center align-items-center">
-                    <h3>Jelenleg nem tartoznak további részek a szériához</h3>
+                    <h3>Jelenleg nem tartoznak további részek a szériához.</h3>
                 </div> 
             @else
                 
@@ -230,15 +230,24 @@
             </div>
         </div>
         <div class="row">
-            <div class="col">
-                <div class="card" style="width: 18rem;">
-                    <img src="{{ asset('images/metro.jpeg') }}" class="card-img-top" alt="...">
-                    <div class="card-body">
-                        <h5 class="card-title">Metró - Triológia</h5>
-                        <a href="#" class="btn btn-primary">Go somewhere</a>
+            @if (count($same) == 0) 
+                <div class="col d-flex justify-content-center align-items-center">
+                    <h3>Nincsenek ehhez hasonló könyvek.</h3>
+                </div> 
+            @else
+                @foreach ($same as $s)
+                    <div class="col">
+                        <div class="card" style="width: 18rem;">
+                            <img src="{{ asset($s->cover) }}" class="card-img-top" alt="...">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ $s->title }}</h5>
+                                <p>{{ $s->writers }}</p>
+                                <a href="/view_book/{{ $s->isbn }}" class="btn btn-primary">Megtekintés</a>
+                            </div>
+                        </div>
                     </div>
-                </div>
-            </div>
+                @endforeach
+            @endif
         </div>
     </div>
 

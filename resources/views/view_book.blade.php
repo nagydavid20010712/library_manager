@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>{{ $book->title }}</title>
+    <title>{{ $book["book"]->title }}</title>
     <link rel="stylesheet" href="{{ asset('css/bootstrap/bootstrap.css') }}">
     <script src="{{ asset('js/jquery/jquery.js') }}"></script>
     <script src="{{ asset('js/bootstrap/bootstrap.js') }}"></script>
@@ -23,7 +23,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Bezárás</button>
-                    <button type="button" class="btn btn-danger" id="confirm_book_delete" value="{{ $book->isbn }}">Igen</button>
+                    <button type="button" class="btn btn-danger" id="confirm_book_delete" value="{{ $book['book']->isbn }}">Igen</button>
                 </div>
             </div>
         </div>
@@ -65,7 +65,7 @@
         @include("ui.menu")
         <div class="row mt-5">
             <div class="col-4 text-center">
-                <img class="img-fluid" src="{{ asset($book->cover) }}" alt="" srcset="">
+                <img class="img-fluid" src="{{ asset($book['book']->cover) }}" alt="" srcset="">
                 <div class="container mt-5">
                     <div class="row">
                         <div class="col-6">
@@ -82,7 +82,7 @@
                     <div class="row">
                         <div class="col-6">
                             <!--cím-->
-                            <h4 id="book_title">{{ $book->title }}</h4>
+                            <h4 id="book_title">{{ $book["book"]->title }}</h4>
                         </div>
                         <div class="col-6">
                             <div class="row float-end">
@@ -94,7 +94,7 @@
                                     </select>
                                 </div>
                                 <div class="col">
-                                    <input type="hidden" name="h_isbn" id="h_isbn" value="{{ $book->isbn }}">
+                                    <input type="hidden" name="h_isbn" id="h_isbn" value="{{ $book['book']->isbn }}">
                                     <button type="button" class="btn btn-primary" id="btn_translate">Fordítás</button>
                                 </div>
                             </div>
@@ -112,7 +112,7 @@
                             <p style="text-align: justify;" id="book_description">
                                 <!--Hemul, a kommandós kiképzőből lett stalker rosszul tűri, ha csapata nem az elvárásai szerint viselkedik. Ám mivel kockázatos küldetéseiért kapott pénze rendszerint kifolyik a keze közül, most mégis kénytelen kísérőül szegődni egy csoport extrém kalandokat kereső, öntörvényű turista mellé. A Zóna azonban nem az a hely, ahová önfeledt szafarikra járhat az ember.
                                 A vadásztúra ígéretesen indul, ám a mutánsoktól hemzsegő vidék korántsem veszélytelen. Az első összecsapások után a csapat tagjai arra is ráébrednek, hogy a legveszedelmesebb szörnyeknek olykor emberarcuk van. No persze olykor a turisták sem egyszerű turisták. De hogy az önként vállalt vesszőfutást ki ússza meg élve, ki juthat ki a Zónából - ha ki lehet még jutni belőle egyáltalán -, azt még egy tapasztalt stalker sem tudja előre megmondani.-->
-                                {{ $book->description }}
+                                {{ $book["book"]->description }}
                             </p>
                         </div>
                     </div>
@@ -129,31 +129,31 @@
                                 <tbody>
                                     <tr>
                                         <td style="background-color: #F1EEDC;">Kiadó:</td>
-                                        <td style="background-color: #F1EEDC;" id="book_publisher">{{ $book->publisher }}</td>
+                                        <td style="background-color: #F1EEDC;" id="book_publisher">{{ $book["book"]->publisher }}</td>
                                     </tr>
                                     <tr>
                                         <td style="background-color: #F1EEDC;">Kiadás éve:</td>
-                                        <td style="background-color: #F1EEDC;" id="book_publish_date">{{ $book->publish_date }}</td>
+                                        <td style="background-color: #F1EEDC;" id="book_publish_date">{{ $book["book"]->publish_date }}</td>
                                     </tr>
                                     <tr>
                                         <td style="background-color: #F1EEDC;">Oldalak száma:</td>
-                                        <td style="background-color: #F1EEDC;" id="book_number_of_pages">{{ $book->number_of_pages }}</td>
+                                        <td style="background-color: #F1EEDC;" id="book_number_of_pages">{{ $book["book"]->number_of_pages }}</td>
                                     </tr>
                                     <tr>
                                         <td style="background-color: #F1EEDC;">Szerző(k):</td>
-                                        <td style="background-color: #F1EEDC;" id="book_writers">{{ $book->writers }}</td>
+                                        <td style="background-color: #F1EEDC;" id="book_writers">{{ $book["book"]->writers }}</td>
                                     </tr>
                                     <tr>
                                         <td style="background-color: #F1EEDC;">Műfajo(k):</td>
-                                        <td style="background-color: #F1EEDC;" id="book_genre">{{ $book->genre }}</td>
+                                        <td style="background-color: #F1EEDC;" id="book_genre">{{ $book["book"]->genre }}</td>
                                     </tr>
                                     <tr>
                                         <td style="background-color: #F1EEDC;">Nyelv:</td>
-                                        <td style="background-color: #F1EEDC;" id="book_language">{{ $book->language }}</td>
+                                        <td style="background-color: #F1EEDC;" id="book_language">{{ $book["book"]->language }}</td>
                                     <tr>
                                     <tr>
                                         <td style="background-color: #F1EEDC;">ISBN:</td>
-                                        <td style="background-color: #F1EEDC;">{{ $book->isbn }}</td>
+                                        <td style="background-color: #F1EEDC;">{{ $book["book"]->isbn }}</td>
                                     <tr>
                                     <tr>
                                         <td style="background-color: #F1EEDC;">Széria:</td>
@@ -161,7 +161,7 @@
                                             @if ($series_name == null)
                                                 nem tartozik szériához
                                             @else
-                                                {{ $series_name->name }}
+                                                {{ $series_name }}
                                             @endif
                                         </td>
                                     </tr>
@@ -211,10 +211,10 @@
                     
                     <div class="col d-flex justify-content-center overflow-x-auto">
                         <div class="card" style="width: 18rem;">
-                            <img src="{{ asset($s->cover) }}" class="card-img-top" alt="...">
+                            <img src="{{ asset($s['book']->cover) }}" class="card-img-top" alt="...">
                             <div class="card-body">
-                                <h5 class="card-title">{{ $s->title }}</h5>
-                                <a href="/view_book/{{ $s->isbn }}" class="btn btn-primary">Megtekintés</a>
+                                <h5 class="card-title">{{ $s["book"]->title }}</h5>
+                                <a href="/view_book/{{ $s['book']->isbn }}" class="btn btn-primary">Megtekintés</a>
                             </div>
                         </div>
                     </div>

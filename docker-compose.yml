@@ -16,8 +16,10 @@ services:
     ports:
       - 8000:8000
     depends_on:
+      - memcached
       - database
       - redis
+
 
   database:
     image: mariadb:latest
@@ -31,11 +33,13 @@ services:
     volumes:
       - db-data:/var/lib/mysql
 
+
   redis:
     image: redis:alpine
     command: redis-server --appendonly yes
     ports:
       - 6379:6379
+
       
   redis-commander:
     image: rediscommander/redis-commander:latest
@@ -45,12 +49,19 @@ services:
     ports:
       - 8081:8081
 
+  
+  #memcached:
+  #   image: memcached:latest
+  #   environment:
+  #    - MEMCACHED_PERSISTENT_ID=persistent_id
+  #   ports:
+  #    - 11211:11211
+
   memcached:
-     image: memcached:latest
-     environment:
-      - MEMCACHED_PERSISTENT_ID=persistent_id
-     ports:
+    image: docker.io/bitnami/memcached:1
+    ports:
       - 11211:11211
+
 
   admin:
     image: hatamiarash7/memcached-admin:latest
@@ -59,6 +70,7 @@ services:
       - MEMCACHED_PORT=11211
     ports:
       - 8085:80
+
 
 
   phpmyadmin:
@@ -70,6 +82,7 @@ services:
       - PMA_HOST=database
       - MYSQL_ROOT_PASSWORD=${DB_PASSWORD}
 
+
   #networks:
   #  - laravel
 
@@ -80,4 +93,3 @@ volumes:
 #  laravel:
 #    external: false
 #    name: laravel
-    

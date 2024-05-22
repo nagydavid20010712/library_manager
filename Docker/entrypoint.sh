@@ -16,14 +16,17 @@ role=${CONTAINER_ROLE:-app}
 composer clear-cache
 composer update
 
+
+
 if [ "$role" = "app" ]; then
     php artisan migrate
     #php artisan db:seed
     php artisan key:generate
+    php artisan config:cache
     php artisan cache:clear
     php artisan config:clear
     php artisan route:clear
-    #php artisan app:cache-database
+    #php artisan app:cache-memcached
     php artisan serve --port=$PORT --host=0.0.0.0 --env=.env
     exec docker-php-entrypoint "$@"
 elif [ "$role" = "queue" ]; then

@@ -15,10 +15,10 @@
             <h2>Könyvtárkezelő</h2>
             @include("ui.menu")
         </div>
+    
+        <div class="row mt-5">
+            
+        </div>
     </div>
 </body>
 </html>
-
-@php
-    phpinfo();
-@endphp

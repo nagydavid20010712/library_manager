@@ -113,7 +113,6 @@ class AddBookController extends Controller
     
                         
                         if($request->input("checked") == "true") {
-                            Log::info("lefutok valamiért");
                             $new_series_id = Series::create([
                                 "name" => $request->input("new_series")
                             ]);

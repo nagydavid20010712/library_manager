@@ -72,14 +72,15 @@ $("#confirm_book_update").click(() => {
                 //console.log(data["updated_data"]);
                 
                 /*adatok frissítése*/
-                $("#book_title").html(data["updated_data"]["title"]);
-                $("#book_description").html(data["updated_data"]["description"]);
-                $("#book_publish_date").html(data["updated_data"]["publish_date"]);
-                $("#book_writers").html(data["updated_data"]["writers"]);
-                $("#book_genre").html(data["updated_data"]["genre"]);
-                $("#book_language").html(data["updated_data"]["language"]);
-                $("#book_number_of_pages").html(data["updated_data"]["number_of_pages"]);
-                $("#book_publisher").html(data["updated_data"]["publisher"]);
+                console.log(data["updated_data"]);
+                $("#book_title").html(data["updated_data"]["book"]["title"]);
+                $("#book_description").html(data["updated_data"]["book"]["description"]);
+                $("#book_publish_date").html(data["updated_data"]["book"]["publish_date"]);
+                $("#book_writers").html(data["updated_data"]["book"]["writers"]);
+                $("#book_genre").html(data["updated_data"]["book"]["genre"]);
+                $("#book_language").html(data["updated_data"]["book"]["language"]);
+                $("#book_number_of_pages").html(data["updated_data"]["book"]["number_of_pages"]);
+                $("#book_publisher").html(data["updated_data"]["book"]["publisher"]);
 
                 /*szerkesztő modal bezárása*/
                 $("#change_book_modal").modal("hide");
@@ -121,6 +122,21 @@ $("#btn_translate").click(() => {
                 $("#error_info").html(data["msg"]);
                 $("#error_modal").modal("show");
             }
+        }
+    });
+});
+
+$("#book_recommend").click((e) => {
+    //console.log(e.target.value);
+    $.ajax({
+        url: "/recommend",
+        type: "POST",
+        data: {
+            "_token": $("meta[name=csrf-token]").attr("content"),
+            "isbn": e.target.value
+        },
+        success: function(data) {
+            
         }
     });
 });

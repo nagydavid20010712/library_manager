@@ -1,7 +1,7 @@
 FROM php:8.2 as php
 
 RUN apt-get update -y
-RUN apt-get install -y unzip libpq-dev libcurl4-gnutls-dev
+RUN apt-get install -y unzip libpq-dev libcurl4-gnutls-dev cron
 RUN docker-php-ext-install pdo pdo_mysql bcmath
 
 RUN apt-get update -y \
@@ -20,6 +20,6 @@ COPY --from=composer:2.3.5 /usr/bin/composer /usr/bin/composer
     
 ENV PORT=8000
 
-RUN chmod -R 777 /var/www
+#RUN chmod -R 777 /var/www
 
 ENTRYPOINT [ "Docker/entrypoint.sh" ]

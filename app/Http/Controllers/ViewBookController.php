@@ -264,7 +264,16 @@ class ViewBookController extends Controller
             });
         
             if($res) {
-                return response()->json(["msgType" => "success", "msg" => "Könyv adatai sikeresen frissítve!", "updated_data" => Book::where("isbn", $request->input("isbn"))->first()], 200);
+                /*cache frissítése*/
+
+                /*legelsőnek kell a könyv szériája*/
+                $isbn = $request->input("isbn");
+                $series_id = Cache::store("memcached")->get("book:" . $isbn)["series"];
+
+                /*frissítjük a cachet*/
+                Cache::store("memcached")->put("book:" . $isbn, ["book" => Book::where("isbn", $isbn)->first(), "series" => $series_id], now()->addHour());
+
+                return response()->json(["msgType" => "success", "msg" => "Könyv adatai sikeresen frissítve!", "updated_data" => Cache::store("memcached")->get("book:" . $isbn)], 200);
             } else {
                 return response()->json(["msgType" => "update_err", "msg" => "Hiba történt az adatok frissítése során"], 200);
             }
@@ -300,5 +309,7 @@ class ViewBookController extends Controller
         return response()->json(["translation" => "success", "translated_title" => $translated_title->json(), "translated_description" => $translated_description->json()], 200);
     }
 
-
+    public function recommend(Request $request) {
+        
+    }
 }

@@ -67,14 +67,19 @@
             <div class="col-4 text-center">
                 <img class="img-fluid" src="{{ asset($book['book']->cover) }}" alt="" srcset="">
                 <div class="container mt-5">
+                    @auth
                     <div class="row">
-                        <div class="col-6">
-                            <button type="button" class="btn btn-primary" id="open_modal">Könyv szerkesztése</button>
+                        <div class="col-4">
+                            <button type="button" class="btn btn-primary" id="open_modal">Szerkesztés</button>
                         </div>
-                        <div class="col-6">
-                            <button type="button" class="btn btn-danger" id="del_open_modal" value="1">Könvy törlése</button>
+                        <div class="col-4">
+                            <button type="button" class="btn btn-danger" id="del_open_modal" value="1">Törlés</button>
+                        </div>
+                        <div class="col-4">
+                            <button type="button" class="btn btn-success" id="book_recommend" value="{{ $book['book']->isbn }}">Ajánlom</button>
                         </div>
                     </div>
+                    @endauth
                 </div>
             </div>
             <div class="col-8">

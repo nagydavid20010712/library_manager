@@ -23,8 +23,8 @@ services:
 
   database:
     image: mariadb:latest
-    ports:
-      - 3306:3306
+    #ports:
+    #  - 3306:3306
     environment:
       - MYSQL_DATABASE=${DB_DATABASE}
       - MYSQL_USER=${DB_USERNAME}
@@ -32,13 +32,14 @@ services:
       - MYSQL_ROOT_PASSWORD=${DB_PASSWORD}
     volumes:
       - db-data:/var/lib/mysql
+      - /logs:/var/log/mysql
 
 
   redis:
     image: redis:alpine
     command: redis-server --appendonly yes
-    ports:
-      - 6379:6379
+    #ports:
+    #  - 6379:6379
 
       
   redis-commander:
@@ -59,8 +60,8 @@ services:
 
   memcached:
     image: docker.io/bitnami/memcached:1
-    ports:
-      - 11211:11211
+    #ports:
+    #  - 11211:11211
 
 
   admin:

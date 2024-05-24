@@ -44,10 +44,10 @@
         </div>
 
         @if (count($books) == 0)
-            <div class="container mt-5">
-                <div class="row">
+            <div class="container mt-5 h-100">
+                <div class="row d-flex flex-row justify-content-center align-items-center h-100">
                     <div class="col text-center">
-                        <h2>Jelenleg a könyvtár üres.</h2>
+                        <h2>Jelenleg a könyvtár üres vagy nincs olyan könyv ami megfelel a szűrési kritériumnak.</h2>
                     </div>
                 </div>
                 <div class="row">

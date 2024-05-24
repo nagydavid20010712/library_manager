@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Book;
 use App\Models\BookInSeries;
+use App\Models\Recommends;
 
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
@@ -13,6 +14,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Auth;
 
 use Purifier;
 
@@ -310,6 +312,15 @@ class ViewBookController extends Controller
     }
 
     public function recommend(Request $request) {
-        
+        try {
+            Recommends::create([
+                "isbn" => $request->input("isbn"),
+                "user_id" => Auth::id()
+            ]);
+
+            return response()->json(["msg" => "Könyv ajanlása sikerült!"], 200);
+        } catch(\Illuminate\Database\QueryException $e) {
+
+        }
     }
 }

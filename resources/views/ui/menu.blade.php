@@ -14,22 +14,24 @@
         <li class="nav-item">
           <a class="nav-link active" href="/add_book">Könyv hozzáadása</a>
         </li>
-        <li>
-          <a href="/log_reg" class="nav-link active">Bejelentkezés/Regisztráció</a>
-        </li>
+        @if (!auth()->check())
+          <li>
+            <a href="/log_reg" class="nav-link active">Bejelentkezés/Regisztráció</a>
+          </li>
+        @endif
         @auth
-        <li class="nav-item">
-          <a class="nav-link active" target="_blank" href="http://localhost:7000">PhpMyAdmin</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link active" target="_blank" href="http://localhost:8081">Redis Admin</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link active" target="_blank" href="http://localhost:8085">MemCached Admin</a>
-        </li>
-        <li>
-          <a href="/logout" class="nav-link active">Kijelentkezés</a>
-        </li>
+          <li class="nav-item">
+            <a class="nav-link active" target="_blank" href="http://localhost:7000">PhpMyAdmin</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" target="_blank" href="http://localhost:8081">Redis Admin</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" target="_blank" href="http://localhost:8085">MemCached Admin</a>
+          </li>
+          <li>
+            <a href="/logout" class="nav-link active">Kijelentkezés</a>
+          </li>
         @endauth
       </ul>
     </div>

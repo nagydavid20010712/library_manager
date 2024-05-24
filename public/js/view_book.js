@@ -72,7 +72,7 @@ $("#confirm_book_update").click(() => {
                 //console.log(data["updated_data"]);
                 
                 /*adatok frissítése*/
-                console.log(data["updated_data"]);
+                //console.log(data["updated_data"]);
                 $("#book_title").html(data["updated_data"]["book"]["title"]);
                 $("#book_description").html(data["updated_data"]["book"]["description"]);
                 $("#book_publish_date").html(data["updated_data"]["book"]["publish_date"]);
@@ -136,7 +136,8 @@ $("#book_recommend").click((e) => {
             "isbn": e.target.value
         },
         success: function(data) {
-            
+            $("#success_info").html(data["msg"]);
+            $("#success_modal").modal("show");
         }
     });
 });
